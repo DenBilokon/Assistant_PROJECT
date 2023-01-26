@@ -65,7 +65,7 @@ class AddressBook(UserDict):
             n = records_num
         for rec in self.data.values():
             if count < n:
-                result += f'{rec.name} (B-day: {rec.birthday}): {", ".join([p.value for p in rec.phones])}\n'
+                result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}): {", ".join([p.value for p in rec.phones])}\n'
                 count += 1
         yield result
 
