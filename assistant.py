@@ -145,17 +145,19 @@ def delete_phone(*args):
 
 @input_error
 def get_birthdays_per_period(*args):
+    period = args[0]
     item = ''
     current_date = datetime.now().date()
     for contact in ADDRESSBOOK.values():
-        contact_birthday = datetime.date(datetime.strptime(str(contact.birthday), '%d %B')).replace(year=current_date.year)
-        if current_date < contact_birthday < current_date + timedelta(days=int(args[0])):
-            item += f'{contact.name}: {" ".join(map(str, contact.phones))} {str(contact.birthday)} {ADDRESSBOOK[contact.name].days_to_birthday()}\n'
+        contact_birthday = datetime.date(datetime.strptime(
+            str(contact.birthday), '%Y-%m-%d')).replace(year=current_date.year)
+        if current_date < contact_birthday < current_date + timedelta(days=int(period)):
+            item += f'{contact.name}: {str(contact.birthday)}\n'
     # f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}): {", ".join([p.value for p in rec.phones])}\n'
     if item:
         return item.rstrip('\n')
     else:
-        return f'No birthdays for the next {args[0]} days'
+        return f'No birthdays for the next {period} days'
 
 
 # Show some contact
