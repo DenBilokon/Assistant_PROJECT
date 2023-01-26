@@ -1,6 +1,8 @@
 import re
+from datetime import datetime, timedelta
 from decorators import input_error
-from bot_classes import Name, Phone, Record, ADDRESSBOOK
+from bot_classes import Name, Phone, Record, ADDRESSBOOK, Mail
+from sort_directory import sort_folder
 
 HELP_TEXT = """This contact bot save your contacts 
     Global commands:
@@ -53,6 +55,37 @@ def add_birthday(*args):
     else:
         return f"Contact {name.value} does not exists"
 
+@input_error
+def add_mail(*args):
+    name = Name(str(args[0]).title())
+    mail = Mail(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].add_mail(mail)
+        return f'{mail.value} successfully added to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
+
+@input_error
+def delete_mail(*args):
+    name = Name(str(args[0]).title())
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].del_mail()
+        return f'Successfully deleted {name.value} mail'
+    else:
+        return f'Cannot delete mail'
+
+
+@input_error
+def change_mail(*args):
+    name = Name(str(args[0]).title())
+    mail = Mail(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].chang_mail(mail)
+        return f'{mail.value} successfully changed to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
 
 # Add user or user with phone to AddressBook
 @input_error
@@ -99,7 +132,7 @@ def delete_contact(*args):
     return f'Contact {args[0]} deleted'
 
 
-# @input_error
+@input_error
 def delete_phone(*args):
     name = Name(str(args[0]).title())
     phone = Phone(args[1])
@@ -108,6 +141,21 @@ def delete_phone(*args):
         return f"Phone for {name.value} was delete"
     else:
         return f"Contact {name.value} does not exist"
+
+
+@input_error
+def get_birthdays_per_period(*args):
+    item = ''
+    current_date = datetime.now().date()
+    for contact in ADDRESSBOOK.values():
+        contact_birthday = datetime.date(datetime.strptime(str(contact.birthday), '%d %B')).replace(year=current_date.year)
+        if current_date < contact_birthday < current_date + timedelta(days=int(args[0])):
+            item += f'{contact.name}: {" ".join(map(str, contact.phones))} {str(contact.birthday)} {ADDRESSBOOK[contact.name].days_to_birthday()}\n'
+    # f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}): {", ".join([p.value for p in rec.phones])}\n'
+    if item:
+        return item.rstrip('\n')
+    else:
+        return f'No birthdays for the next {args[0]} days'
 
 
 # Show some contact
@@ -144,13 +192,17 @@ COMMANDS = {
     search: ["search"],
     phone: ["phone"],
     add_phone: ["add contact"],
-    change: ["change"],
+    change: ["change phone"],
     delete_contact: ["delete user"],
     delete_phone: ["delete phone"],
     add_birthday: ["add birthday"],
     days_to_bday: ["when celebrate"],
     help_user: ["help"],
     bye: [".", "bye", "good bye", "close", "exit"],
+    get_birthdays_per_period: ["birthday soon"],
+    add_mail: ["add mail"],
+    delete_mail: ["delete mail"],
+    change_mail: ["change mail"]
 }
 
 
