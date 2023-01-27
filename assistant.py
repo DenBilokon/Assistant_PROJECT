@@ -149,11 +149,9 @@ def get_birthdays_per_period(*args):
     item = ''
     current_date = datetime.now().date()
     for contact in ADDRESSBOOK.values():
-        contact_birthday = datetime.date(datetime.strptime(
-            str(contact.birthday), '%Y-%m-%d')).replace(year=current_date.year)
+        contact_birthday = datetime.date(datetime.strptime(str(contact.birthday), '%Y-%m-%d')).replace(year=current_date.year)
         if current_date < contact_birthday < current_date + timedelta(days=int(period)):
-            item += f'{contact.name}: {str(contact.birthday)}\n'
-    # f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}): {", ".join([p.value for p in rec.phones])}\n'
+            item += f'{contact.name} (B-day: {contact.birthday}; email: {contact.mail}): {", ".join([p.value for p in contact.phones])}\n'
     if item:
         return item.rstrip('\n')
     else:
