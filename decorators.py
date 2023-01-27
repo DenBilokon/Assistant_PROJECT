@@ -1,4 +1,4 @@
-from bot_classes import WrongTypePhone, WrongLenPhone, WrongMail
+from addressbook_classes import WrongTypePhone, WrongLenPhone, WrongMail
 
 
 def input_error(func):

@@ -1,8 +1,8 @@
 import re
 from datetime import datetime, timedelta
 from decorators import input_error
-from bot_classes import Name, Phone, Record, ADDRESSBOOK, Mail
-from sort_directory import sort_folder
+from addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail
+
 
 HELP_TEXT = """This contact bot save your contacts 
     Global commands:

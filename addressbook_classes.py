@@ -70,8 +70,6 @@ class AddressBook(UserDict):
         yield result
 
 
-
-
 class Field:
 
     def __init__(self, value):
