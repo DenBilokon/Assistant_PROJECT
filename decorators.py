@@ -1,4 +1,4 @@
-from addressbook_classes import WrongTypePhone, WrongLenPhone, WrongMail
+from addressbook_classes import WrongTypePhone, WrongLenPhone, WrongMail, WrongAddress
 
 
 def input_error(func):
@@ -19,5 +19,7 @@ def input_error(func):
             return 'Incorrect phone number'
         except WrongMail:
             return 'User already have email. You can only change or delete'
+        except WrongAddress:
+            return 'User already have address. You can only change or remove'
 
     return wrapper
