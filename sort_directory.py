@@ -1,72 +1,132 @@
+from pathlib import Path
 import os
 import re
 import shutil
+import sys
+from termcolor import colored
 
 
-def sort_folder(path):
-    def normalize(name):
-
-        CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-        TRANSLATION = (
-        "a", "b", "v", "g", "d", "e", "e", "zh", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
-        "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
-
-        TRANS = {}
-
-        for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
-            TRANS[ord(c)] = l
-            TRANS[ord(c.upper())] = l.upper()
-
-        new_name = name.translate(TRANS)
-
-        new_name = re.sub("[^a-zA-Z0-9 \n\.]", "_", new_name)
-
-        return new_name
-
-    if not path:
-        return 'Please enter a folder path!'
-    elif os.path.exists(path) != True:
-        return 'Please enter a correct folder path!'
-
-    basepath = os.path.abspath(path)
-
-    CATEGORIES = {
-        "images": [".jpeg", ".png", ".jpg", ".svg"],
-        "documents": [".doc", ".docx", ".txt", ".pdf", ".xlsx", ".pptx"],
-        "audio": [".mp3", ".ogg", ".wav", ".amr"],
-        "video": [".avi", ".mp4", ".mov", ".mkv"],
-        "archives": [".zip", ".gz", ".tar"]
-    }
-
-    for keys in list(CATEGORIES):
-        target = f"{basepath}/{keys.capitalize()}"
-        if not os.path.exists(target):
-            os.mkdir(target)
-
-    for root, dirs, files in os.walk(basepath, topdown=False):
-        for dir in dirs:
-            os.rename(os.path.join(root, dir),
-                      os.path.join(root, normalize(dir)))
-
-    for root, dirs, files in os.walk(basepath):
+def normalize_names(name):
+    """Normalize names from cyrillic to latin"""
+    cyrillic_symbols = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
+    translations = ("a", "b", "v", "g", "d", "e", "e", "j", "z",
+                    "i", "j", "k", "l", "m", "n", "o", "p", "r",
+                    "s", "t", "u", "f", "h", "ts", "ch", "sh",
+                    "sch", "", "y", "", "e", "yu", "ya", "je",
+                    "i", "ji", "g")
+    trans = {}
+    for i, j in zip(cyrillic_symbols, translations):
+        trans[ord(i)] = j
+        trans[ord(i.upper())] = j.upper()
+        name_list = name.split(".")
+        name_list[0] = name_list[0].translate(trans)
+        name_list[0] = re.sub("\W+", "_", name_list[0])
+        name = f"{name_list[0]}.{name_list[1]}"
+    return name
+def sort_create_files(start_path):
+    """create dirs"""
+    dir_images = os.path.join(start_path, "images")
+    dir_videos = os.path.join(start_path, "videos")
+    dir_music = os.path.join(start_path, "music")
+    dir_documents = os.path.join(start_path, "documents")
+    dir_archives = os.path.join(start_path, "archives")
+    dir_programming = os.path.join(start_path, "programming")
+    dir_others = os.path.join(start_path, "others")
+    list_of_dirs = [dir_images, dir_videos, dir_documents, dir_music, dir_archives, dir_others]
+    name_of_dirs = ["images", "videos", "music", "documents", "archives", "others"]
+    for direct in list_of_dirs:
+        try:
+            os.mkdir(direct)
+        except FileExistsError:
+            pass
+    """Removing and renaming files"""
+    list_image = ('JPEG', 'PNG', 'JPG', 'SVG', 'BMP')
+    list_video = ('AVI', 'MP4', 'MOV', 'MKV')
+    list_documents = ('DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX', 'RTF', 'XLS')
+    list_music = ('MP3', 'OGG', 'WAV', 'AMR')
+    list_archives = ('ZIP', 'GZ', 'TAR', 'RAR', '7Z')
+    list_programming = ('PY', 'PHP', 'HTML', 'JS', 'CSS')
+    known_extensions = []
+    unknown_extensions = []
+    for root, subFolders, files in os.walk(start_path):
         for file in files:
-            if os.path.splitext(file)[1].lower() in CATEGORIES["images"]:
-                os.replace(f"{root}/{file}", f"{basepath}/Images/{normalize(file)}")
-            elif os.path.splitext(file)[1].lower() in CATEGORIES["documents"]:
-                os.replace(f"{root}/{file}", f"{basepath}/Documents/{normalize(file)}")
-            elif os.path.splitext(file)[1].lower() in CATEGORIES["audio"]:
-                os.replace(f"{root}/{file}", f"{basepath}/Audio/{normalize(file)}")
-            elif os.path.splitext(file)[1].lower() in CATEGORIES["video"]:
-                os.replace(f"{root}/{file}", f"{basepath}/Video/{normalize(file)}")
-            elif os.path.splitext(file)[1].lower() in CATEGORIES["archives"]:
-                os.replace(f"{root}/{file}", f"{basepath}/Archives/{normalize(file)}")
-                shutil.unpack_archive(f"{basepath}/Archives/{file}", f"{basepath}/Archives/{os.path.splitext(file)[0]}")
-
-    for root, dirs, files in os.walk(basepath, topdown=False):
-        if not files:
             try:
-                os.rmdir(root)
+                txt_path = os.path.join(root, file)
+                list_files = file.rsplit(".")
+                if list_files[-1].upper() in list_image:
+                    new_name = os.path.join(root, normalize_names(file))
+                    os.rename(txt_path, new_name)
+                    txt_path = new_name
+                    shutil.move(txt_path, dir_images)
+                    (known_extensions.append(list_files[-1]))
+                elif list_files[-1].upper() in list_video:
+                    new_name = os.path.join(root, normalize_names(file))
+                    os.rename(txt_path, new_name)
+                    txt_path = new_name
+                    shutil.move(txt_path, dir_videos)
+                    known_extensions.append(list_files[-1])
+                elif list_files[-1].upper() in list_music:
+                    new_name = os.path.join(root, normalize_names(file))
+                    os.rename(txt_path, new_name)
+                    txt_path = new_name
+                    shutil.move(txt_path, dir_music)
+                    known_extensions.append(list_files[-1])
+                elif list_files[-1].upper() in list_documents:
+                    new_name = os.path.join(root, normalize_names(file))
+                    os.rename(txt_path, new_name)
+                    txt_path = new_name
+                    shutil.move(txt_path, dir_documents)
+                    known_extensions.append(list_files[-1])
+                elif list_files[-1].upper() in list_programming:
+                    new_name = os.path.join(root, normalize_names(file))
+                    os.rename(txt_path, new_name)
+                    txt_path = new_name
+                    shutil.move(txt_path, dir_programming)
+                    known_extensions.append(list_files[-1])
+                elif list_files[-1].upper() in list_archives:
+                    filename = normalize_names(file)
+                    new_name = os.path.join(root, filename)
+                    os.rename(txt_path, new_name)
+                    txt_path = new_name
+                    os.mkdir(os.path.join(dir_archives, os.path.splitext(filename)[0]))
+                    shutil.move(txt_path, os.path.join(dir_archives, os.path.splitext(filename)[0]))
+                    txt_path = os.path.join(dir_archives, os.path.splitext(filename)[0], filename)
+                    try:
+                        shutil.unpack_archive(txt_path, os.path.join(dir_archives, os.path.splitext(filename)[0]))
+                    except (ValueError, shutil.ReadError):
+                        pass
+                    known_extensions.append(list_files[-1])
+                else:
+                    os.path.join(dir_others, file)
+                    new_name = os.path.join(root, normalize_names(file))
+                    os.rename(txt_path, new_name)
+                    txt_path = new_name
+                    shutil.move(txt_path, dir_others)
+                    unknown_extensions.append(list_files[-1])
             finally:
                 continue
+    text = colored('\n------------------------- File sorting is done successfully! -------------------------\n', 'green')
+    print(text)
+    print("Known_extensions - ", known_extensions)
+    print("Unknown_extensions - ", unknown_extensions)
 
-    return f"Folder '{path}' has been sorted"
+    """Delete folders after removing"""
+    for direct in Path(start_path).glob("*"):
+        if direct.is_dir() and direct.name not in name_of_dirs:
+            try:
+                shutil.rmtree(direct, ignore_errors=True)
+            except PermissionError:
+                print("Permission error for delete", direct)
+def run_sort():
+    try:
+
+        a = input('path: ')
+        # sort_create_files(sys.argv[1])
+        sort_create_files(a)
+    except (IndexError, FileNotFoundError):
+        print("Please input correct path to sort folder")
+        pass
+
+
+if __name__ == '__main__':
+    run_sort()
