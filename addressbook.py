@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, timedelta
 from decorators import input_error
-from addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail
+from addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
 
 
 HELP_TEXT = """This contact bot save your contacts 
@@ -110,6 +110,34 @@ def change(*args):
     ADDRESSBOOK.change_record(name.value, old_phone.value, new_phone.value)
     return f'User {name} changed {old_phone} to {new_phone}'
 
+@input_error
+def add_address(*args):
+    name = Name(str(args[0]).title())
+    address = Address(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].add_address(address)
+        return f'Address: {address.value}, successfully added to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
+@input_error
+def change_address(*args):
+    name = Name(str(args[0]).title())
+    address = Address(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].change_address(address)
+        return f'Address: {address.value}, successfully changed to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
+@input_error
+def remove_address(*args):
+    name = Name(str(args[0]).title())
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].remove_address()
+        return f'Successfully deleted {name.value} address'
+    else:
+        return f'Cannot delete address'
 
 @input_error
 def days_to_bday(*args):
@@ -202,7 +230,10 @@ COMMANDS = {
     get_birthdays_per_period: ["birthday soon"],
     add_mail: ["add mail"],
     delete_mail: ["delete mail"],
-    change_mail: ["change mail"]
+    change_mail: ["change mail"],
+    add_address: ["add address"],
+    change_address: ["change address"],
+    remove_address: ["delete address"]
 }
 
 
