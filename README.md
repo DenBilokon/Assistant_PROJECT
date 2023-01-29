@@ -4,34 +4,38 @@
 The following python libraries were also used for implementation: <b>pathlib, os, re, shutil, sys, datetime, collections, pickle</b>.
 ## Installation
 
-Download package, unpack it and use next command to install it from unpacked folder: `pip install -e`.
+Download package, unpack it and use next command to install it from unpacked folder: pip install -e.
 
 ## Description
 
 After starting the program, the user has a choice of what he wants to work with:
- - SORT DIRECTORY
- - ADDRESSBOOK
- - NOTEBOOK
+ - [SORT DIRECTORY](#sort-directory)
+ - [ADDRESSBOOK](#addressbook)
+ - [NOTEBOOK](#notebook)
  
  After choosing one of the three scripts, the user proceeds to direct work with the selected script.
+
+__________________________________________________________________________________________________________________________________________________________________
 
 ### SORT DIRECTORY
 
 This script allows the user to sort files by the following categories:
-- "images": [".jpeg", ".png", ".jpg", ".svg", “.bmp”], 
-- "documents": [".doc", ".docx", ".txt", ".pdf", ".xlsx", ".pptx", “.rtf”], 
--"audio": [".mp3", ".ogg", ".wav", ".amr"], 
-- "video": [".avi", ".mp4", ".mov", ".mkv"], 
-- "archives": [".zip", ".gz", ".tar", “.rar”, '.7z' ] 
-- "programming": [".php", ".js", ".py", ".html", ".css"]
+- **images**: [".jpeg", ".png", ".jpg", ".svg", “.bmp”], 
+- **documents**: [".doc", ".docx", ".txt", ".pdf", ".xlsx", ".pptx", “.rtf”], 
+- **audio**: [".mp3", ".ogg", ".wav", ".amr"], 
+- **video**: [".avi", ".mp4", ".mov", ".mkv"], 
+- **archives**: [".zip", ".gz", ".tar", “.rar”, '.7z' ] 
+- **programming**: [".php", ".js", ".py", ".html", ".css"]
 
  During sorting, the script unzips all archives and then places them together with other files into new folders - 'images', 'documents', 'audio', 'video', 'archives'.
  
- Runs the script using the command: `clean-folder {folder path}`
+ Runs the script using the command: <b>clean-folder {folder path}</b>
+ 
+ __________________________________________________________________________________________________________________________________________________________________
  
  ### ADDRESSBOOK
  
-With the help of this script, the user can maintain an address book. It opens up opportunities to create, edit and delete information about contacts.  Also, all user actions are saved to a file using pickle, so contact data is not lost with each new launch.
+With the help of this script, the user can maintain an address book. It opens up opportunities to create, edit, delete and search information about contacts.  Also, all user actions are saved to a file using pickle, so contact data is not lost with each new launch.
 
 To work with the script, you need to use the following commands:
 - `add contact` - add new contact. Input user name and phone
@@ -92,6 +96,8 @@ To work with the script, you need to use the following commands:
 
 **Example:** `good bye`
 
+_____________________________________________________________________________________________________________________________________________________________________
+
 ### NOTEBOOK
 This script helps the user to create, edit and delete notes and also provides the option to add tags to them.  In addition, the script can be used to search for notes or tags.  All your information will be stored in a file with pickle and will not be lost after exiting the program.
 
@@ -121,7 +127,7 @@ To work with the script, you need to use the following commands:
     
 **Example:** `good bye`
 
-
+_____________________________________________________________________________________________________________________________________________________________________
 
 
 
