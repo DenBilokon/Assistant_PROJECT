@@ -1,6 +1,8 @@
 import re
+from datetime import datetime, timedelta
 from decorators import input_error
-from bot_classes import Name, Phone, Record, ADDRESSBOOK
+from addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
+
 
 HELP_TEXT = """This contact bot save your contacts 
     Global commands:
@@ -53,6 +55,37 @@ def add_birthday(*args):
     else:
         return f"Contact {name.value} does not exists"
 
+@input_error
+def add_mail(*args):
+    name = Name(str(args[0]).title())
+    mail = Mail(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].add_mail(mail)
+        return f'{mail.value} successfully added to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
+
+@input_error
+def delete_mail(*args):
+    name = Name(str(args[0]).title())
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].del_mail()
+        return f'Successfully deleted {name.value} mail'
+    else:
+        return f'Cannot delete mail'
+
+
+@input_error
+def change_mail(*args):
+    name = Name(str(args[0]).title())
+    mail = Mail(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].chang_mail(mail)
+        return f'{mail.value} successfully changed to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
 
 # Add user or user with phone to AddressBook
 @input_error
@@ -77,6 +110,34 @@ def change(*args):
     ADDRESSBOOK.change_record(name.value, old_phone.value, new_phone.value)
     return f'User {name} changed {old_phone} to {new_phone}'
 
+@input_error
+def add_address(*args):
+    name = Name(str(args[0]).title())
+    address = Address(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].add_address(address)
+        return f'Address: {address.value}, successfully added to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
+@input_error
+def change_address(*args):
+    name = Name(str(args[0]).title())
+    address = Address(str(args[1]))
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].change_address(address)
+        return f'Address: {address.value}, successfully changed to contact {name.value}'
+    else:
+        return f'Contact {name.value} does not exist'
+
+@input_error
+def remove_address(*args):
+    name = Name(str(args[0]).title())
+    if name.value in ADDRESSBOOK:
+        ADDRESSBOOK[name.value].remove_address()
+        return f'Successfully deleted {name.value} address'
+    else:
+        return f'Cannot delete address'
 
 @input_error
 def days_to_bday(*args):
@@ -99,7 +160,7 @@ def delete_contact(*args):
     return f'Contact {args[0]} deleted'
 
 
-# @input_error
+@input_error
 def delete_phone(*args):
     name = Name(str(args[0]).title())
     phone = Phone(args[1])
@@ -108,6 +169,21 @@ def delete_phone(*args):
         return f"Phone for {name.value} was delete"
     else:
         return f"Contact {name.value} does not exist"
+
+
+@input_error
+def get_birthdays_per_period(*args):
+    period = args[0]
+    item = ''
+    current_date = datetime.now().date()
+    for contact in ADDRESSBOOK.values():
+        contact_birthday = datetime.date(datetime.strptime(str(contact.birthday), '%Y-%m-%d')).replace(year=current_date.year)
+        if current_date < contact_birthday < current_date + timedelta(days=int(period)):
+            item += f'{contact.name} (B-day: {contact.birthday}; email: {contact.mail}): {", ".join([p.value for p in contact.phones])}\n'
+    if item:
+        return item.rstrip('\n')
+    else:
+        return f'No birthdays for the next {period} days'
 
 
 # Show some contact
@@ -144,13 +220,20 @@ COMMANDS = {
     search: ["search"],
     phone: ["phone"],
     add_phone: ["add contact"],
-    change: ["change"],
+    change: ["change phone"],
     delete_contact: ["delete user"],
     delete_phone: ["delete phone"],
     add_birthday: ["add birthday"],
     days_to_bday: ["when celebrate"],
     help_user: ["help"],
     bye: [".", "bye", "good bye", "close", "exit"],
+    get_birthdays_per_period: ["birthday soon"],
+    add_mail: ["add mail"],
+    delete_mail: ["delete mail"],
+    change_mail: ["change mail"],
+    add_address: ["add address"],
+    change_address: ["change address"],
+    remove_address: ["delete address"]
 }
 
 
@@ -167,10 +250,11 @@ def run_bot(user_input):
     command, data = parse_command(user_input.lower())
     if not command:
         return "Incorrect input. Try again"
+
     return command(*data)
 
 
-def main():
+def run_addressbook():
     try:
         ADDRESSBOOK.read_file()
     except FileNotFoundError:
@@ -193,6 +277,3 @@ def main():
                 print("Try again, please")
         print(result)
 
-
-if __name__ == "__main__":
-    main()

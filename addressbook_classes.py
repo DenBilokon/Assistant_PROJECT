@@ -1,6 +1,7 @@
 from collections import UserDict
 from datetime import datetime
 import pickle
+import re
 
 
 class WrongLenPhone(Exception):
@@ -8,6 +9,14 @@ class WrongLenPhone(Exception):
 
 
 class WrongTypePhone(Exception):
+    """ Exception when a letter is in the phone number """
+
+
+class WrongMail(Exception):
+    """ Exception when a letter is in the phone number """
+
+
+class WrongAddress(Exception):
     """ Exception when a letter is in the phone number """
 
 
@@ -33,25 +42,25 @@ class AddressBook(UserDict):
         result = ''
         for rec in self.data.values():
             if str(symb).lower() in str(rec.name).lower():
-                result += f'{rec.name} (B-day: {rec.birthday}): {", ".join([p.value for p in rec.phones])}\n'
+                result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
             else:
                 for phone in rec.phones:
                     if str(symb).lower() in str(phone):
-                        result += f'{rec.name} (B-day: {rec.birthday}): {", ".join([p.value for p in rec.phones])}\n'
+                        result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
         return result
 
     def show_rec(self, name):
-        return f'{name} (B-day: {self.data[name].birthday}): {", ".join([str(phone.value) for phone in self.data[name].phones])}'
+        return f'{name} (B-day: {self.data[name].birthday}; email: {self.data[name].mail}; address: {self.data[name].address}): {", ".join([str(phone.value) for phone in self.data[name].phones])}'
 
     def show_all_rec(self):
-        return "\n".join(f'{rec.name} (B-day: {rec.birthday}): {", ".join([p.value for p in rec.phones])}' for rec in self.data.values())
+        return "\n".join(f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}' for rec in self.data.values())
 
     def change_record(self, name_user, old_record_num, new_record_num):
         record = self.data.get(name_user)
         if record:
             record.change(old_record_num, new_record_num)
 
-    def iterator(self, n):
+    def iterator(self, n=1):
         records = list(self.data.keys())
         records_num = len(records)
         count = 0
@@ -60,7 +69,7 @@ class AddressBook(UserDict):
             n = records_num
         for rec in self.data.values():
             if count < n:
-                result += f'{rec.name} (B-day: {rec.birthday}): {", ".join([p.value for p in rec.phones])}\n'
+                result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
                 count += 1
         yield result
 
@@ -167,10 +176,51 @@ class Birthday(datetime):
         self.__birthday = self.sanitize_date(year, month, day)
 
 
+class Mail(Field):
+    def __init__(self, value):
+        super().__init__(value)
+        self.value = Mail.check_mail(value)
+
+    def __str__(self):
+        return str(self.value)
+
+    @staticmethod
+    def check_mail(email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if re.fullmatch(regex, str(email)):
+            return email
+        else:
+            raise ValueError
+
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, value):
+        self.__value = Mail.check_mail(value)
+
+
+class Address(Field):
+    def __init__(self, value):
+        super().__init__(value)
+        self._value = value
+
+    def __str__(self):
+        return str(self._value)
+
+    def __repr__(self):
+        return str(self._value)
+
+    @Field.value.setter
+    def value(self, value):
+        self._value = value
+
+
 class Record:
     """ Class for record name or phones"""
 
-    def __init__(self, name, phone=None, birthday=None):
+    def __init__(self, name, phone=None, birthday=None, mail=None, address=None):
         if birthday:
             self.birthday = Birthday(*birthday)
         else:
@@ -178,6 +228,8 @@ class Record:
         self.name = name
         self.phone = Phone(phone)
         self.phones = list()
+        self.mail = mail
+        self.address = address
         if isinstance(phone, Phone):
             self.phones.append(phone)
 
@@ -216,6 +268,18 @@ class Record:
     def add_user_birthday(self, year, month, day):
         self.birthday = Birthday.sanitize_date(int(year), int(month), int(day))
 
+    def add_mail(self, mail):
+        if not self.mail:
+            self.mail = Mail(mail)
+        else:
+            raise WrongMail
+
+    def del_mail(self):
+        self.mail = None
+
+    def chang_mail(self, mail):
+        self.mail = Mail(mail)
+
     def days_to_birthday(self):
         cur_date = datetime.now().date()
         cur_year = cur_date.year
@@ -232,6 +296,18 @@ class Record:
                 return f"{self.name}'s birthday will be in {delta.days} days"
         else:
             return f"{self.name}'s birthday is unknown"
+
+    def add_address(self, address):
+        if not self.address:
+            self.address = Address(address)
+        else:
+            raise WrongAddress
+
+    def change_address(self,address):
+        self.address = Address(address)
+
+    def remove_address(self):
+        self.address = None
 
 
 ADDRESSBOOK = AddressBook()
