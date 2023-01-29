@@ -1,4 +1,4 @@
-from notes_classes import Note, Tag, NOTEBOOK, Record
+from .notes_classes import NOTEBOOK, Record
 
 HELP_TEXT = """This contact bot save your contacts 
     Global commands:
@@ -36,9 +36,12 @@ def change_note(index, new_note):
         return f"Note {index} not exist. Try again"
 
 
-def delete_note(*args):
-    NOTEBOOK.remove_note(int(*args))
-    return f"Note has been deleted"
+def delete_note(index):
+    if int(index) in NOTEBOOK.data.keys():
+        NOTEBOOK.remove_note(int(index))
+        return f"Note has been deleted"
+    else:
+        return f'Not found index {index}'
 
 
 def search_notes(message):

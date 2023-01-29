@@ -1,4 +1,4 @@
-from addressbook_classes import WrongTypePhone, WrongLenPhone, WrongMail, WrongAddress
+from .addressbook_classes import WrongTypePhone, WrongLenPhone, WrongMail, WrongAddress
 
 
 def input_error(func):
