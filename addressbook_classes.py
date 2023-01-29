@@ -15,8 +15,10 @@ class WrongTypePhone(Exception):
 class WrongMail(Exception):
     """ Exception when a letter is in the phone number """
 
+
 class WrongAddress(Exception):
     """ Exception when a letter is in the phone number """
+
 
 class AddressBook(UserDict):
     """ Dictionary class """
@@ -197,6 +199,7 @@ class Mail(Field):
     def value(self, value):
         self.__value = Mail.check_mail(value)
 
+
 class Address(Field):
     def __init__(self, value):
         super().__init__(value)
@@ -211,6 +214,7 @@ class Address(Field):
     @Field.value.setter
     def value(self, value):
         self._value = value
+
 
 class Record:
     """ Class for record name or phones"""
@@ -274,19 +278,6 @@ class Record:
 
     def chang_mail(self, mail):
         self.mail = Mail(mail)
-
-    # def days_to_birthday(self):
-    #     current_date = datetime.now().date()
-    #     current_year = current_date.year
-    #     if self.birthday:
-    #         birth_date = self.birthday.value.date().replace(year=current_year)
-    #         if birth_date >= current_date:
-    #             delta = birth_date - current_date
-    #         else:
-    #             delta = birth_date.replace(year=current_year + 1) - current_date
-    #         return f"{delta.days} days left until {self.name}'s birthday"
-    #     else:
-    #         return f'The birthday of the contact {self.name} is not set'
 
     def days_to_birthday(self):
         cur_date = datetime.now().date()

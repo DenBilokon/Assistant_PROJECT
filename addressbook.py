@@ -250,10 +250,11 @@ def run_bot(user_input):
     command, data = parse_command(user_input.lower())
     if not command:
         return "Incorrect input. Try again"
+
     return command(*data)
 
 
-def main():
+def run_addressbook():
     try:
         ADDRESSBOOK.read_file()
     except FileNotFoundError:
@@ -276,6 +277,3 @@ def main():
                 print("Try again, please")
         print(result)
 
-
-if __name__ == "__main__":
-    main()

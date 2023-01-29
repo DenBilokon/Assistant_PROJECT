@@ -3,7 +3,7 @@ import os
 import re
 import shutil
 import sys
-from termcolor import colored
+# from termcolor import colored
 
 
 def normalize_names(name):
