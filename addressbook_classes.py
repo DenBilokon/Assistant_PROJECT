@@ -179,12 +179,13 @@ class Birthday(datetime):
 class Mail(Field):
     def __init__(self, value):
         super().__init__(value)
-        self.__value = Mail.check_mail(value)
+        self.value = Mail.check_mail(value)
 
     def __str__(self):
         return str(self.value)
 
-    def check_mail(self, email):
+    @staticmethod
+    def check_mail(email):
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         if re.fullmatch(regex, str(email)):
             return email
