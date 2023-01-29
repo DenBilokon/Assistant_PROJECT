@@ -3,7 +3,6 @@ import os
 import re
 import shutil
 import sys
-# from termcolor import colored
 
 
 def normalize_names(name):
@@ -23,6 +22,8 @@ def normalize_names(name):
         name_list[0] = re.sub("\W+", "_", name_list[0])
         name = f"{name_list[0]}.{name_list[1]}"
     return name
+
+
 def sort_create_files(start_path):
     """create dirs"""
     dir_images = os.path.join(start_path, "images")
@@ -105,8 +106,8 @@ def sort_create_files(start_path):
                     unknown_extensions.append(list_files[-1])
             finally:
                 continue
-    text = colored('\n------------------------- File sorting is done successfully! -------------------------\n', 'green')
-    print(text)
+
+    print('\n------------------------- File sorting is done successfully! -------------------------\n')
     print("Known_extensions - ", known_extensions)
     print("Unknown_extensions - ", unknown_extensions)
 
@@ -117,12 +118,12 @@ def sort_create_files(start_path):
                 shutil.rmtree(direct, ignore_errors=True)
             except PermissionError:
                 print("Permission error for delete", direct)
+
+
 def run_sort():
     try:
-
-        a = input('path: ')
-        # sort_create_files(sys.argv[1])
-        sort_create_files(a)
+        print('Input path: ')
+        sort_create_files(sys.argv[1])
     except (IndexError, FileNotFoundError):
         print("Please input correct path to sort folder")
         pass
