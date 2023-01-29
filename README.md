@@ -27,7 +27,7 @@ This script allows the user to sort files by the following categories:
 
  During sorting, the script unzips all archives and then places them together with other files into new folders - 'images', 'documents', 'audio', 'video', 'archives'.
  
- Runs the script using the command: <b>clean-folder {folder path}</b>
+ Runs the script using the command: `clean-folder {folder path}`
  
  ### ADDRESSBOOK
  
