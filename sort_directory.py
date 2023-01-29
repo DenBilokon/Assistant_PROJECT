@@ -123,6 +123,15 @@ def run_sort():
         a = input('path: ')
         # sort_create_files(sys.argv[1])
         sort_create_files(a)
+        while True:
+            b = input("\nWant to sort something else? (yes/no)\n>>>> ")
+            if b == "yes":
+                a = input('path: ')
+                # sort_create_files(sys.argv[1])
+                sort_create_files(a)
+            if b == "no":
+                print("Goodbye!")
+                break
     except (IndexError, FileNotFoundError):
         print("Please input correct path to sort folder")
         pass
