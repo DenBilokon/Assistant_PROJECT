@@ -179,7 +179,7 @@ class Birthday(datetime):
 class Mail(Field):
     def __init__(self, value):
         super().__init__(value)
-        self.__value = value
+        self.__value = Mail.check_mail(value)
 
     def __str__(self):
         return str(self.value)
