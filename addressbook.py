@@ -194,7 +194,10 @@ def phone(*args):
 
 # Search contacts with some symbols
 def search(*args):
-    return ADDRESSBOOK.search(str(args[0]))
+    if ADDRESSBOOK.search(str(args[0])):
+        return ADDRESSBOOK.search(str(args[0]))
+    else:
+        return "Searching failed! KeyWord doesn't exist"
 
 
 # Show all contacts

@@ -41,12 +41,15 @@ class AddressBook(UserDict):
     def search(self, symb):
         result = ''
         for rec in self.data.values():
-            if str(symb).lower() in str(rec.name).lower():
-                result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
+            if rec in self.data.values():
+                if str(symb).lower() in str(rec.name).lower():
+                    result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
+                else:
+                    for phone in rec.phones:
+                        if str(symb).lower() in str(phone):
+                            result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
             else:
-                for phone in rec.phones:
-                    if str(symb).lower() in str(phone):
-                        result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
+                continue
         return result
 
     def show_rec(self, name):
