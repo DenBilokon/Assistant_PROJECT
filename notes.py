@@ -1,10 +1,23 @@
 from notes_classes import Note, Tag, NOTEBOOK, Record
 
-HELP_TEXT = """This contact bot save your contacts 
+HELP_TEXT = """This bot save your notes 
     Global commands:
-      'add contact' - add new contact. Input user name and phone
-    Example: add User_name 095-xxx-xx-xx
-    """
+      'add' - add new note. Input note text and then input tag or tags (key words)
+    Example: add
+      'change' - command for change existing note. Input note number and then input new text
+    Example: change
+      'delete' - command for delete note. Input note number
+    Example: delete 1
+      'find note' - command to find notes. Input note text that you want to find
+    Example: find note KeyWord
+      'find tag' - command to find notes by tag. Input tag that you want to find
+    Example: find tag Tag
+      'hello'/'hi' - greeting command to start working with the bot
+      'help' - command for output helptext
+      'show all' - show all notes
+    Example: show all
+      'exit/'.'/'bye'/'good bye'/'close' - exit bot
+    Example: good bye"""
 
 
 def hello(*args):
@@ -22,14 +35,16 @@ def help_user(*args):
 
 
 def add_note(*args):
-    note = input('Print your note ')
-    tag = input('Print tag or tags to your note ')
+    note = input('Enter your note: ')
+    tag = input('Enter tag or tags to your note: ')
     record = Record(note, tag)
     NOTEBOOK.add_note(record)
     return f"Note successfully added"
 
 
-def change_note(index, new_note):
+def change_note(*args):
+    index = input('Enter note number: ')
+    new_note = input('Enter new note: ')
     try:
         return NOTEBOOK.edit_note(int(index), new_note)
     except KeyError:
@@ -64,8 +79,8 @@ COMMANDS = {
     add_note: ["add"],
     change_note: ["change"],
     delete_note: ["delete"],
-    search_notes: ["find"],
-    sort_tags: ["sort"]
+    search_notes: ["find note"],
+    sort_tags: ["find tag"]
 }
 
 
