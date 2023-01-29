@@ -1,13 +1,13 @@
 """"Menu"""
-from addressbook import main as a_main
-from notes import main as b_main
+from addressbook import run_addressbook as a_main
+from notes import run_notes as b_main
 from sort_directory import run_sort as c_main
 
 
 def menu():
     work_loop = True
     while True:
-        user_input = input("Menu press button:\n1-AddressBook\n2-Notes\n3-Sort_Files\n0-Exit\nChoose a number from 0 - 3\n>>>")
+        user_input = input("Menu press button:\n1-AddressBook\n2-Notes\n3-Sort_Files\n0-Exit\nChoose a number from 0 - 3\n>>> ")
         if user_input == '1':
             print('AddressBook Started!')
             a_main()
