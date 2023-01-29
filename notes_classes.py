@@ -19,10 +19,11 @@ class NoteBook(UserDict):
             pickle.dump(self.data, writer)
 
     def add_note(self, record):
-        if self.index:
-            self.ind_lst.append(self.index)
-            self.data[max(self.ind_lst)] = record
+        while self.index in self.ind_lst:
             self.index += 1
+        self.ind_lst.append(self.index)
+        self.ind_lst.append(self.index)
+        self.data[max(self.ind_lst)] = record
         return self.index
     
     def edit_note(self, index, new_note):

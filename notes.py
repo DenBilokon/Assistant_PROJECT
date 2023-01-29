@@ -1,4 +1,4 @@
-from .notes_classes import NOTEBOOK, Record
+from notes_classes import NOTEBOOK, Record
 
 HELP_TEXT = """This bot save your notes 
     Global commands:
@@ -52,6 +52,11 @@ def change_note(*args):
 
 
 def delete_note(index):
+    try:
+        int(index)
+    except ValueError:
+        return 'Try again. Input index'
+
     if int(index) in NOTEBOOK.data.keys():
         NOTEBOOK.remove_note(int(index))
         return f"Note has been deleted"
