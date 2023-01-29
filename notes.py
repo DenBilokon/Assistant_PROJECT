@@ -1,4 +1,4 @@
-from notes_classes import NOTEBOOK, Record
+from .notes_classes import NOTEBOOK, Record
 
 HELP_TEXT = """This bot save your notes 
     Global commands:

@@ -1,7 +1,6 @@
-import re
-from datetime import datetime, timedelta
-from decorators import input_error
-from addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
+from datetime import timedelta
+from .decorators import *
+from .addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
 
 
 HELP_TEXT = """This contact bot save your contacts 
@@ -69,7 +68,8 @@ def add_birthday(*args):
         ADDRESSBOOK[name.value].add_user_birthday(*birthday)
         return f"The Birthday for {name.value} was recorded"
     else:
-        return f"Contact {name.value} does not exists"
+        raise UserMissing("User is not found. Please try again")
+
 
 @input_error
 def add_mail(*args):
@@ -79,7 +79,7 @@ def add_mail(*args):
         ADDRESSBOOK[name.value].add_mail(mail)
         return f'{mail.value} successfully added to contact {name.value}'
     else:
-        return f'Contact {name.value} does not exist'
+        raise UserMissing("User is not found. Please try again")
 
 
 @input_error
@@ -89,7 +89,7 @@ def delete_mail(*args):
         ADDRESSBOOK[name.value].del_mail()
         return f'Successfully deleted {name.value} mail'
     else:
-        return f'Cannot delete mail'
+        raise ElseError("Something went wrong. Please try again")
 
 
 @input_error
@@ -100,7 +100,7 @@ def change_mail(*args):
         ADDRESSBOOK[name.value].chang_mail(mail)
         return f'{mail.value} successfully changed to contact {name.value}'
     else:
-        return f'Contact {name.value} does not exist'
+        raise UserMissing("User is not found. Please try again")
 
 
 # Add user or user with phone to AddressBook
@@ -123,8 +123,14 @@ def change(*args):
     name = Name(str(args[0]).title())
     old_phone = Phone(args[1])
     new_phone = Phone(args[2])
-    ADDRESSBOOK.change_record(name.value, old_phone.value, new_phone.value)
-    return f'User {name} changed {old_phone} to {new_phone}'
+    if name in ADDRESSBOOK:
+        ADDRESSBOOK.change_record(name.value, old_phone.value, new_phone.value)
+        return f'User {name} changed {old_phone} to {new_phone}'
+    elif name not in ADDRESSBOOK:
+        raise UserMissing("User is not found. Please try again")
+    else:
+        raise PhoneMissing("Phone number is not found. Please try again")
+
 
 @input_error
 def add_address(*args):
@@ -134,7 +140,8 @@ def add_address(*args):
         ADDRESSBOOK[name.value].add_address(address)
         return f'Address: {address.value}, successfully added to contact {name.value}'
     else:
-        return f'Contact {name.value} does not exist'
+        raise UserMissing("User is not found. Please try again")
+
 
 @input_error
 def change_address(*args):
@@ -144,7 +151,8 @@ def change_address(*args):
         ADDRESSBOOK[name.value].change_address(address)
         return f'Address: {address.value}, successfully changed to contact {name.value}'
     else:
-        return f'Contact {name.value} does not exist'
+        raise UserMissing("User is not found. Please try again")
+
 
 @input_error
 def remove_address(*args):
@@ -153,7 +161,8 @@ def remove_address(*args):
         ADDRESSBOOK[name.value].remove_address()
         return f'Successfully deleted {name.value} address'
     else:
-        return f'Cannot delete address'
+        raise ElseError("Something went wrong. Please try again")
+
 
 @input_error
 def days_to_bday(*args):
@@ -165,7 +174,7 @@ def days_to_bday(*args):
         else:
             return f'{name.value} birthday is unknown'
     else:
-        return f'Contact {name.value} does not exists'
+        raise UserMissing("User is not found. Please try again")
 
 
 # Delete contact
@@ -173,7 +182,7 @@ def days_to_bday(*args):
 def delete_contact(*args):
     name = ADDRESSBOOK[args[0].title()]
     ADDRESSBOOK.remove_record(name)
-    return f'Contact {args[0]} deleted'
+    raise UserMissing("User is not found. Please try again")
 
 
 @input_error
@@ -184,7 +193,7 @@ def delete_phone(*args):
         ADDRESSBOOK[name.value].remove_phone(phone.value)
         return f"Phone for {name.value} was delete"
     else:
-        return f"Contact {name.value} does not exist"
+        raise PhoneMissing("Phone number is not found. Please try again")
 
 
 @input_error

@@ -1,7 +1,7 @@
 """"Menu"""
-from addressbook import run_addressbook as a_main
-from notes import run_notes as b_main
-from sort_directory import run_sort as c_main
+from .addressbook import run_addressbook as a_main
+from .notes import run_notes as b_main
+from .sort_directory import run_sort as c_main
 
 
 def menu():
