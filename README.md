@@ -29,7 +29,7 @@ This script allows the user to sort files by the following categories:
 
  During sorting, the script unzips all archives and then places them together with other files into new folders - images, documents, audio, video, archives, programming, other.
  
- Runs the script using the command: `clean-folder {folder path}`
+ Enter the folder path to run the script, example: `C:\Users\user\Desktop\trash`
  
  __________________________________________________________________________________________________________________________________________________________________
  
