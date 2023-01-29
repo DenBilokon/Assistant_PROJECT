@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 import re
 import shutil
-import sys
 
 
 def normalize_names(name):
@@ -122,8 +121,19 @@ def sort_create_files(start_path):
 
 def run_sort():
     try:
-        print('Input path: ')
-        sort_create_files(sys.argv[1])
+        sort_create_files(input('Input path: '))
+        while True:
+            b = input("\nDo you want to sort something else? (yes/no)\n>>>> ")
+            if b == "yes":
+                a = input('path: ')
+                # sort_create_files(sys.argv[1])
+                sort_create_files(a)
+                continue
+            if b == "no":
+                print("Goodbye!")
+                break
+            else:
+                print("The answer must be 'yes' or 'no'!")
     except (IndexError, FileNotFoundError):
         print("Please input correct path to sort folder")
         pass
