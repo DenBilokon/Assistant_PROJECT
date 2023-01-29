@@ -129,9 +129,12 @@ def run_sort():
                 a = input('path: ')
                 # sort_create_files(sys.argv[1])
                 sort_create_files(a)
+                continue
             if b == "no":
                 print("Goodbye!")
                 break
+            else:
+                print("The answer must be 'yes' or 'no'!")
     except (IndexError, FileNotFoundError):
         print("Please input correct path to sort folder")
         pass
