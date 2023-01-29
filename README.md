@@ -4,7 +4,7 @@
 The following python libraries were also used for implementation: <b>pathlib, os, re, shutil, sys, datetime, collections, pickle</b>.
 ## Installation
 
-Download package, unpack it and use next command to install it from unpacked folder: pip install -e.
+Download package, unpack it and use next command to install it from unpacked folder: `pip install -e`.
 
 ## Description
 
@@ -27,9 +27,9 @@ This script allows the user to sort files by the following categories:
 - **archives**: [".zip", ".gz", ".tar", “.rar”, '.7z' ] 
 - **programming**: [".php", ".js", ".py", ".html", ".css"]
 
- During sorting, the script unzips all archives and then places them together with other files into new folders - 'images', 'documents', 'audio', 'video', 'archives'.
+ During sorting, the script unzips all archives and then places them together with other files into new folders - images, documents, audio, video, archives, programming, other.
  
- Runs the script using the command: <b>clean-folder {folder path}</b>
+ Runs the script using the command: `clean-folder {folder path}`
  
  __________________________________________________________________________________________________________________________________________________________________
  
