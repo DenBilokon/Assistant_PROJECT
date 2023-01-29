@@ -21,7 +21,9 @@ def help_user(*args):
     return HELP_TEXT
 
 
-def add_note(note, tag):
+def add_note(*args):
+    note = input('Print your note ')
+    tag = input('Print tag or tags to your note ')
     record = Record(note, tag)
     NOTEBOOK.add_note(record)
     return f"Note successfully added"
@@ -48,7 +50,7 @@ def show_all(*args):
         return NOTEBOOK.show_all()
     else:
         return 'No notes found'
-    
+
 
 def sort_tags(message):
     return NOTEBOOK.sort_tags(message)
@@ -83,7 +85,7 @@ def run_bot(user_input):
     return command(*data)
 
 
-def main():
+def run_notes():
     try:
         NOTEBOOK.read_file()
     except FileNotFoundError:
@@ -105,7 +107,3 @@ def main():
             else:
                 print("Try again, please")
         print(result)
-
-
-if __name__ == "__main__":
-    main()

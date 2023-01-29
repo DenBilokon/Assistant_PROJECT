@@ -2,10 +2,12 @@ from collections import UserDict
 import pickle
 import re
 
+
 class NoteBook(UserDict):
     def __init__(self):
         super().__init__()
         self.index = 1
+        self.ind_lst = []
 
     def read_file(self):
         with open('NoteBook.bin', 'rb') as reader:
@@ -18,7 +20,8 @@ class NoteBook(UserDict):
 
     def add_note(self, record):
         if self.index:
-            self.data[self.index] = record
+            self.ind_lst.append(self.index)
+            self.data[max(self.ind_lst)] = record
             self.index += 1
         return self.index
     
@@ -51,7 +54,7 @@ class NoteBook(UserDict):
             return 'No matches found'
 
     def show_all(self):
-        return "\n".join(f'{index} {", ".join([p.value for p in wr.tags])} {wr.note.value}' for index, wr in self.data.items())
+        return "\n".join(f'{index} | {", ".join([p.value for p in wr.tags])} | {wr.note.value}' for index, wr in self.data.items())
 
 
 class Field:
