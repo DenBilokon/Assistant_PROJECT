@@ -4,7 +4,7 @@
 The following python libraries were also used for implementation: <b>pathlib, os, re, shutil, sys, datetime, collections, pickle</b>.
 ## Installation
 
-Download package, unpack it and use next command to install it from unpacked folder: pip install -e.
+Download package, unpack it and use next command to install it from unpacked folder: `pip install -e`.
 
 ## Description
 
