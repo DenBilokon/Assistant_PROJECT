@@ -125,8 +125,7 @@ def run_sort():
         while True:
             b = input("\nDo you want to sort something else? (yes/no)\n>>>> ")
             if b == "yes":
-                a = input('path: ')
-                # sort_create_files(sys.argv[1])
+                a = input('Input path: ')
                 sort_create_files(a)
                 continue
             if b == "no":

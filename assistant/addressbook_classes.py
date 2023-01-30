@@ -75,25 +75,25 @@ class AddressBook(UserDict):
         for rec in self.data.values():
             if rec in self.data.values():
                 if str(symb).lower() in str(rec.name).lower():
-                    result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address.tittle()}): {", ".join([p.value for p in rec.phones])}\n'
+                    result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
                 else:
                     for phone in rec.phones:
                         if str(symb).lower() in str(phone):
-                            result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address.tittle()}): {", ".join([p.value for p in rec.phones])}\n'
+                            result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
             else:
                 continue
         return result
 
     def show_rec(self, name):
-        return f'{name} (B-day: {self.data[name].birthday}; email: {self.data[name].mail}; address: {self.data[name].address.tittle()}): {", ".join([str(phone.value) for phone in self.data[name].phones])}'
+        return f'{name} (B-day: {self.data[name].birthday}; email: {self.data[name].mail}; address: {self.data[name].address}): {", ".join([str(phone.value) for phone in self.data[name].phones])}'
 
     def show_all_rec(self):
-        return "\n".join(f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address.tittle()}): {", ".join([p.value for p in rec.phones])}' for rec in self.data.values())
+        return "\n".join(f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}' for rec in self.data.values())
 
     def change_record(self, name_user, old_record_num, new_record_num):
         record = self.data.get(name_user)
         if record:
-            record.change(old_record_num, new_record_num)
+            return record.change(old_record_num, new_record_num)
         else:
             raise IndexError("Not enough parameters to execute the command")
 
@@ -106,7 +106,7 @@ class AddressBook(UserDict):
             n = records_num
         for rec in self.data.values():
             if count < n:
-                result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address.tittle()}): {", ".join([p.value for p in rec.phones])}\n'
+                result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
                 count += 1
         yield result
 
@@ -157,7 +157,7 @@ class Phone(Field):
         try:
             new_phone = [str(int(i)) for i in new_phone]
         except ValueError:
-            raise PhoneError("Entered phone number has some mistakes. Check it and try again")
+            raise PhoneError
         else:
             new_phone = "".join(new_phone)
             if len(new_phone) == 12:
@@ -165,7 +165,7 @@ class Phone(Field):
             elif len(new_phone) == 10:
                 return f"+38{new_phone}"
             else:
-                raise PhoneLengthError("Wrong length of phone number. Must be 10 or 12 symbols")
+                raise PhoneLengthError
 
     def __init__(self, value):
         super().__init__(value)
@@ -190,7 +190,7 @@ class Birthday(datetime):
         try:
             birthday = datetime(year=year, month=month, day=day)
         except ValueError:
-            raise BirthdayTypeError("Wrong format of birthday. Enter birthday in format yyyy-mm-dd")
+            raise BirthdayTypeError
         else:
             return str(birthday.date())
 
@@ -226,7 +226,7 @@ class Mail(Field):
         if re.fullmatch(regex, str(email)):
             return email
         else:
-            raise MailTypeError("Wrong type of email. Check it and try again")
+            raise MailTypeError
 
     @property
     def value(self):
@@ -277,7 +277,7 @@ class Record:
                 self.phones.append(phone)
                 return "Phone was added"
         else:
-            raise PhoneError("Entered phone number has some mistakes. Check it and try again")
+            raise PhoneError
 
     def change(self, old_phone, new_phone):
         old_phone = Phone(old_phone)
@@ -308,7 +308,7 @@ class Record:
         if not self.mail:
             self.mail = Mail(mail)
         else:
-            raise MailTypeError("Wrong type of email. Check it and try again")
+            raise MailExistError
 
     def del_mail(self):
         self.mail = None
@@ -337,7 +337,7 @@ class Record:
         if not self.address:
             self.address = Address(address)
         else:
-            raise AddressExistError("Wrong address type. Check it and try again")
+            raise AddressExistError
 
     def change_address(self, address):
         self.address = Address(address)

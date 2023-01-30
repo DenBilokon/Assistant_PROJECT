@@ -39,61 +39,56 @@ With the help of this script, the user can maintain an address book. It opens up
 
 To work with the script, you need to use the following commands:
 - `add contact` - add new contact. Input user name and phone
-
 **Example:** `add contact User_name 095-xxx-xx-xx`
 
 - `add address` - add user address to contact. Input user name and address
-
 **Example:** `add address User_name User_address`
+- 
 - `add birthday` - add birthday to contact. Input user name and birthday in format yyyy-mm-dd
-
 **Example:** `add User_name 1971-01-00`
+- 
 - `add mail` - add e-mail address to contact. Input user name and e-mail
-
 **Example:** `add mail User_name user123@gmail.com`
+- 
 - `birthday soon` - command to display birthdays in a given interval (N-days)
-
 **Example:** `birthday soon 7`
+- 
 - `change address` - change user address. Input user name and address
-
 **Example:** `change address User_name User_new_address`
+- 
 - `change mail` - change user e-mail address. Input user name and e-mail
-
 **Example:** `change mail User_name user123@gmail.com`
+- 
 - `change phone` - change users old phone to new phone. Input user name, old phone and new phone
-
 **Example:** `change User_name 095-xxx-xx-xx 050-xxx-xx-xx`
+- 
 - `delete address` - delete user address from contact. Input user name
-
 **Example:** `delete address User_name`
+- 
 - `delete mail` - delete user e-mail address from contact. Input user name
-
 **Example:** `delete mail User_name`
+- 
 - `delete user` - delete contact (name and phones). Input user name
-
 **Example:** `delete contact User_name`
+- 
 - `delete phone` - delete phone of some User. Input user name and phone
-
 **Example:** `delete phone User_name 099-xxx-xx-xx`
+- 
 - `hello/hi` - greeting command to start working with the bot
 - `help` - command for output helptext
 - `phone` - show contacts of input user. Input user name
-
 **Example:** `phone User_name`
+- 
 - `search` - keyword search. Input keywords that you want
-
 **Example:** `search KeyWord`
+- 
 - `show all` - show all contacts
-
 **Example:** `show all`
+- 
 - `show list` - show list of contacts which contains N-users
-
-**Example:** `show list 5` 
-- `when celebrate` - show days to birthday of User/ Input user name
-
 **Example:** `when celebrate User_name`
+- 
 - `exit`/`bye`/`good bye`/`close` - exit bot
-
 **Example:** `good bye`
 
 _____________________________________________________________________________________________________________________________________________________________________
@@ -104,27 +99,26 @@ This script helps the user to create, edit and delete notes and also provides th
 To work with the script, you need to use the following commands:
 
 - `add` - add new note. Input note text and then input tag or tags (key words)
-
 **Example:** `add`
+
 - `change` - command for change existing note. Input note number and then input new text
-
 **Example:** `change`
+
 - `delete` - command for delete note. Input note number
-
 **Example:** `delete 1`
-- `find note` - command to find notes. Input note text that you want to find
 
+- `find note` - command to find notes. Input note text that you want to find
 **Example:** `find note KeyWord`
+
 - `find tag` - command to find notes by tag. Input tag that you want to find
-    
 **Example:** `find tag Tag`
+
 - `hello`/`hi` - greeting command to start working with the bot
 - `help` - command for output helptext
 - `show all` - show all notes
-
 **Example:** `show all`
+
 - `exit`/`bye`/`good bye`/`close` - exit bot
-    
 **Example:** `good bye`
 
 _____________________________________________________________________________________________________________________________________________________________________
