@@ -25,7 +25,7 @@ HELP_TEXT = """This contact bot save your contacts
     Example: delete address User_name
       'delete mail' - delete user e-mail address from contact. Input user name
     Example: delete mail User_name
-      'delete user' - delete contact (name and phones). Input user name
+      'delete contact' - delete contact (name and phones). Input user name
     Example: delete contact User_name
       'delete phone' - delete phone of some User. Input user name and phone
     Example: delete phone User_name 099-xxx-xx-xx
@@ -176,9 +176,15 @@ def days_to_bday(*args):
 
 @input_error
 def delete_contact(*args):
-    name = ADDRESSBOOK[args[0].title()]
-    ADDRESSBOOK.remove_record(name)
-    raise UserMissing("User is not found. Please try again")
+    if len(args[0].title()) == 0:
+        raise ValueError
+    else:
+        try:
+            name = ADDRESSBOOK[args[0].title()]
+            ADDRESSBOOK.remove_record(name)
+            return f"Contact {args[0].title()} has been deleted"
+        except KeyError:
+            raise UserMissing
 
 
 @input_error
@@ -242,7 +248,7 @@ COMMANDS = {
     phone: ["phone"],
     add_phone: ["add contact"],
     change: ["change phone"],
-    delete_contact: ["delete user"],
+    delete_contact: ["delete contact"],
     delete_phone: ["delete phone"],
     add_birthday: ["add birthday"],
     days_to_bday: ["when celebrate"],
@@ -295,4 +301,3 @@ def run_addressbook():
             else:
                 print("Try again, please")
         print(result)
-
