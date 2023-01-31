@@ -3,7 +3,7 @@ with open("README.md", 'r', encoding="utf-8") as f:
     long_description = f.read()
 
 setup(name='help-assistant',
-    version='0.0.10',
+    version='0.0.11',
     description= 'Addressbook, notebook, clean folder',
     url='https://github.com/DenBilokon/Assistant_PROJECT',
     readme = 'README.md',

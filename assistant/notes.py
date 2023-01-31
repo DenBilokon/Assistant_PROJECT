@@ -104,7 +104,7 @@ def parse_command(text: str):
 def run_bot(user_input):
     command, data = parse_command(user_input.lower())
     if not command:
-        return "Incorrect input. Try again"
+        return "Incorrect input. Try again. You can print 'help' to see all commands"
     return command(*data)
 
 
