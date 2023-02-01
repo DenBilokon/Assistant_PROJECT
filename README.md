@@ -1,7 +1,7 @@
 WELCOME! 
 
-# CLI ASSISTANT
-<b>CLI Assistant</b> is a python program that acts as a personal assistant with a command line interface.  The project is installed as a python package and can be called anywhere on the system using a special command.
+# HELP-ASSISTANT
+<b>Help-Assistant</b> is a python program that acts as a personal assistant with a command line interface.  The project is installed as a python package and can be called anywhere on the system using a special command.
 
 The following python libraries were also used for implementation: <b>pathlib, os, re, shutil, sys, datetime, collections, pickle</b>.
 ## Installation
