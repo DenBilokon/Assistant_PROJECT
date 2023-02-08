@@ -1,6 +1,6 @@
 from datetime import timedelta
-from .decorators import *
-from .addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
+from decorators import *
+from addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
 
 
 HELP_TEXT = """This contact bot save your contacts 

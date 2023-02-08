@@ -182,7 +182,7 @@ class Phone(Field):
         self._value = Phone.sanitize_phone_number(value)
 
 
-class Birthday(datetime):
+class Birthday(datetime, Field):
     """ Class for creating fields 'birthday' """
 
     @staticmethod
@@ -195,6 +195,7 @@ class Birthday(datetime):
             return str(birthday.date())
 
     def __init__(self, year, month, day):
+        super().__init__()
         self.__birthday = self.sanitize_date(year, month, day)
 
     def __str__(self):

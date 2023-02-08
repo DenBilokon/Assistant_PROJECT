@@ -65,6 +65,7 @@ class Field:
 
 class Tag(Field):
     def __init__(self, value):
+        super().__init__(value)
         self.value = value
 
     def __str__(self):
@@ -73,6 +74,7 @@ class Tag(Field):
 
 class Note(Field):
     def __init__(self, value):
+        super().__init__(value)
         self.value = value
 
     def __str__(self):
