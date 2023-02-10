@@ -1,0 +1,2 @@
+setuptools~=65.5.0
+prettytable~=3.6.0

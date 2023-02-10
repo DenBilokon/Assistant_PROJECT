@@ -1,7 +1,7 @@
 from datetime import timedelta
-from .decorators import *
-from .addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
-
+from decorators import *
+from addressbook_classes import Name, Phone, Record, ADDRESSBOOK, Mail, Address
+import re
 
 HELP_TEXT = """This contact bot save your contacts 
     Global commands:
@@ -120,7 +120,6 @@ def change(*args):
     old_phone = Phone(args[1])
     new_phone = Phone(args[2])
     if name.value in ADDRESSBOOK:
-        # ADDRESSBOOK.change_record(name.value, old_phone.value, new_phone.value)
         if ADDRESSBOOK.change_record(name.value, old_phone.value, new_phone.value):
             return f'User {name} changed {old_phone} to {new_phone}'
         else:
@@ -190,9 +189,9 @@ def delete_contact(*args):
 @input_error
 def delete_phone(*args):
     name = Name(str(args[0]).title())
-    phone = Phone(args[1])
+    phon = Phone(args[1])
     if name.value in ADDRESSBOOK:
-        ADDRESSBOOK[name.value].remove_phone(phone.value)
+        ADDRESSBOOK[name.value].remove_phone(phon.value)
         return f"Phone for {name.value} was delete"
     else:
         raise PhoneMissing("Phone number is not found. Please try again")
