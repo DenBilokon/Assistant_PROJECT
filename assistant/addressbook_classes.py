@@ -1,7 +1,8 @@
 from collections import UserDict
+from checking import BirthdayCheck, MailCheck, PhoneCheck
 from datetime import datetime
+from pretty_view import AddressbookView
 import pickle
-import re
 
 
 class PhoneLengthError(Exception):
@@ -54,6 +55,9 @@ class ElseError(Exception):
 
 class AddressBook(UserDict):
     """ Dictionary class """
+    def __init__(self):
+        super().__init__()
+        self.x = AddressbookView()
 
     def read_file(self):
         with open('AddressBook.bin', 'rb') as reader:
@@ -71,24 +75,28 @@ class AddressBook(UserDict):
         self.data.pop(record.name.value, None)
 
     def search(self, symb):
-        result = ''
+        result = []
         for rec in self.data.values():
             if rec in self.data.values():
                 if str(symb).lower() in str(rec.name).lower():
-                    result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
+                    result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join(p.value for p in rec.phones)])
                 else:
                     for phone in rec.phones:
                         if str(symb).lower() in str(phone):
-                            result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
+                            result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join(p.value for p in rec.phones)])
             else:
                 continue
-        return result
+        return self.x.create_table(result)
 
     def show_rec(self, name):
-        return f'{name} (B-day: {self.data[name].birthday}; email: {self.data[name].mail}; address: {self.data[name].address}): {", ".join([str(phone.value) for phone in self.data[name].phones])}'
+        result = [name, self.data[name].birthday, self.data[name].mail, self.data[name].address, ", ".join(str(p.value) for p in self.data[name].phones)]
+        return self.x.create_row(result)
 
     def show_all_rec(self):
-        return "\n".join(f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}' for rec in self.data.values())
+        result = []
+        for rec in self.data.values():
+            result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join([p.value for p in rec.phones])])
+        return self.x.create_table(result)
 
     def change_record(self, name_user, old_record_num, new_record_num):
         record = self.data.get(name_user)
@@ -101,14 +109,14 @@ class AddressBook(UserDict):
         records = list(self.data.keys())
         records_num = len(records)
         count = 0
-        result = ''
+        result = []
         if n > records_num:
             n = records_num
         for rec in self.data.values():
             if count < n:
-                result += f'{rec.name} (B-day: {rec.birthday}; email: {rec.mail}; address: {rec.address}): {", ".join([p.value for p in rec.phones])}\n'
+                result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join([p.value for p in rec.phones])])
                 count += 1
-        yield result
+        yield self.x.create_table(result)
 
 
 class Field:
@@ -144,32 +152,10 @@ class Name(Field):
 class Phone(Field):
     """Class for do phone number standard type"""
 
-    @staticmethod
-    def sanitize_phone_number(phone):
-        new_phone = (
-            str(phone).strip()
-            .removeprefix("+")
-            .replace("(", "")
-            .replace(")", "")
-            .replace("-", "")
-            .replace(" ", "")
-        )
-        try:
-            new_phone = [str(int(i)) for i in new_phone]
-        except ValueError:
-            raise PhoneError
-        else:
-            new_phone = "".join(new_phone)
-            if len(new_phone) == 12:
-                return f"+{new_phone}"
-            elif len(new_phone) == 10:
-                return f"+38{new_phone}"
-            else:
-                raise PhoneLengthError
-
     def __init__(self, value):
         super().__init__(value)
-        self._value = Phone.sanitize_phone_number(value)
+        self.phone = PhoneCheck()
+        self._value = self.phone.check(value)
 
     def __str__(self):
         return str(self._value)
@@ -179,24 +165,25 @@ class Phone(Field):
 
     @Field.value.setter
     def value(self, value):
-        self._value = Phone.sanitize_phone_number(value)
+        self._value = self.phone.check(value)
 
 
 class Birthday(datetime, Field):
     """ Class for creating fields 'birthday' """
-
-    @staticmethod
-    def sanitize_date(year, month, day):
-        try:
-            birthday = datetime(year=year, month=month, day=day)
-        except ValueError:
-            raise BirthdayTypeError
-        else:
-            return str(birthday.date())
+    #
+    # @staticmethod
+    # def sanitize_date(year, month, day):
+    #     try:
+    #         birthday = datetime(year=year, month=month, day=day)
+    #     except ValueError:
+    #         raise BirthdayTypeError
+    #     else:
+    #         return str(birthday.date())
 
     def __init__(self, year, month, day):
         super().__init__()
-        self.__birthday = self.sanitize_date(year, month, day)
+        self.birth = BirthdayCheck()
+        self.__birthday = self.birth.check(year, month, day)
 
     def __str__(self):
         return str(self.__birthday)
@@ -210,24 +197,17 @@ class Birthday(datetime, Field):
 
     @birthday.setter
     def birthday(self, year, month, day):
-        self.__birthday = self.sanitize_date(year, month, day)
+        self.__birthday = self.birth.check(year, month, day)
 
 
 class Mail(Field):
     def __init__(self, value):
         super().__init__(value)
-        self.value = Mail.check_mail(value)
+        self.mail = MailCheck()
+        self.value = self.mail.check(value)
 
     def __str__(self):
         return str(self.value)
-
-    @staticmethod
-    def check_mail(email):
-        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        if re.fullmatch(regex, str(email)):
-            return email
-        else:
-            raise MailTypeError
 
     @property
     def value(self):
@@ -235,7 +215,7 @@ class Mail(Field):
 
     @value.setter
     def value(self, value):
-        self.__value = Mail.check_mail(value)
+        self.__value = self.mail.check(value)
 
 
 class Address(Field):
@@ -258,6 +238,7 @@ class Record:
     """ Class for record name or phones"""
 
     def __init__(self, name, phone=None, birthday=None, mail=None, address=None):
+        self.birth = BirthdayCheck()
         if birthday:
             self.birthday = Birthday(*birthday)
         else:
@@ -303,7 +284,7 @@ class Record:
                 raise PhoneMissing
 
     def add_user_birthday(self, year, month, day):
-        self.birthday = Birthday.sanitize_date(int(year), int(month), int(day))
+        self.birthday = self.birth.check(int(year), int(month), int(day))
 
     def add_mail(self, mail):
         if not self.mail:

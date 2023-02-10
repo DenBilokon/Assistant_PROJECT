@@ -1,4 +1,5 @@
 from collections import UserDict
+from pretty_view import NotebookView
 import pickle
 import re
 
@@ -8,6 +9,7 @@ class NoteBook(UserDict):
         super().__init__()
         self.index = 1
         self.ind_lst = []
+        self.x = NotebookView()
 
     def read_file(self):
         with open('NoteBook.bin', 'rb') as reader:
@@ -34,28 +36,31 @@ class NoteBook(UserDict):
         self.data.pop(index, None)
 
     def search_note(self, symb):
-        result = ''
+        result = []
         for rec in self.data:
             if symb.lower() in str(self.data[rec].note).lower():
-                result += f'{rec} {", ".join([p.value for p in self.data[rec].tags])} {self.data[rec].note.value}\n'
+                result.append([rec, ", ".join(p.value for p in self.data[rec].tags), self.data[rec].note.value])
         if result:
-            return result.rstrip('\n')
+            return self.x.create_table(result)
         else:
             return 'No matches found'
 
     def sort_tags(self, symb):
-        result = ''
+        result = []
         for rec in self.data:
             for tag in self.data[rec].tags:
                 if symb.lower() in str(tag).lower():
-                    result += f'{rec} {", ".join([p.value for p in self.data[rec].tags])} {self.data[rec].note.value}\n'
+                    result.append([rec, ", ".join(p.value for p in self.data[rec].tags), self.data[rec].note.value])
         if result:
-            return result.rstrip('\n')
+            return self.x.create_table(result)
         else:
             return 'No matches found'
 
     def show_all(self):
-        return "\n".join(f'{index} | {", ".join([p.value for p in wr.tags])} | {wr.note.value}' for index, wr in self.data.items())
+        result = []
+        for index, wr in self.data.items():
+            result.append([index, ", ".join(p.value for p in wr.tags), wr.note.value])
+        return self.x.create_table(result)
 
 
 class Field:
