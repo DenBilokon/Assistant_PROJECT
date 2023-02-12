@@ -67,4 +67,4 @@ class MailCheck(Checking):
         if re.fullmatch(regex, str(email)):
             return email
         else:
-            return "Wrong type of email. Check it and try again"
+            raise ''
