@@ -6,7 +6,6 @@ import shutil
 
 
 class SortDirectory:
-
     def __init__(self):
         self.x = SortDirView()
         self.name = NameCheck()
@@ -21,7 +20,14 @@ class SortDirectory:
         dir_archives = os.path.join(start_path, "archives")
         dir_programming = os.path.join(start_path, "programming")
         dir_others = os.path.join(start_path, "others")
-        list_of_dirs = [dir_images, dir_videos, dir_documents, dir_music, dir_archives, dir_others]
+        list_of_dirs = [
+            dir_images,
+            dir_videos,
+            dir_documents,
+            dir_music,
+            dir_archives,
+            dir_others,
+        ]
         name_of_dirs = ["images", "videos", "music", "documents", "archives", "others"]
         for direct in list_of_dirs:
             try:
@@ -29,12 +35,12 @@ class SortDirectory:
             except FileExistsError:
                 pass
         """Removing and renaming files"""
-        list_image = ('JPEG', 'PNG', 'JPG', 'SVG', 'BMP')
-        list_video = ('AVI', 'MP4', 'MOV', 'MKV')
-        list_documents = ('DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX', 'RTF', 'XLS')
-        list_music = ('MP3', 'OGG', 'WAV', 'AMR')
-        list_archives = ('ZIP', 'GZ', 'TAR', 'RAR', '7Z')
-        list_programming = ('PY', 'PHP', 'HTML', 'JS', 'CSS')
+        list_image = ("JPEG", "PNG", "JPG", "SVG", "BMP")
+        list_video = ("AVI", "MP4", "MOV", "MKV")
+        list_documents = ("DOC", "DOCX", "TXT", "PDF", "XLSX", "PPTX", "RTF", "XLS")
+        list_music = ("MP3", "OGG", "WAV", "AMR")
+        list_archives = ("ZIP", "GZ", "TAR", "RAR", "7Z")
+        list_programming = ("PY", "PHP", "HTML", "JS", "CSS")
         known_extensions = []
         unknown_extensions = []
         for root, subFolders, files in os.walk(start_path):
@@ -77,11 +83,23 @@ class SortDirectory:
                         new_name = os.path.join(root, filename)
                         os.rename(txt_path, new_name)
                         txt_path = new_name
-                        os.mkdir(os.path.join(dir_archives, os.path.splitext(filename)[0]))
-                        shutil.move(txt_path, os.path.join(dir_archives, os.path.splitext(filename)[0]))
-                        txt_path = os.path.join(dir_archives, os.path.splitext(filename)[0], filename)
+                        os.mkdir(
+                            os.path.join(dir_archives, os.path.splitext(filename)[0])
+                        )
+                        shutil.move(
+                            txt_path,
+                            os.path.join(dir_archives, os.path.splitext(filename)[0]),
+                        )
+                        txt_path = os.path.join(
+                            dir_archives, os.path.splitext(filename)[0], filename
+                        )
                         try:
-                            shutil.unpack_archive(txt_path, os.path.join(dir_archives, os.path.splitext(filename)[0]))
+                            shutil.unpack_archive(
+                                txt_path,
+                                os.path.join(
+                                    dir_archives, os.path.splitext(filename)[0]
+                                ),
+                            )
                         except (ValueError, shutil.ReadError):
                             pass
                         known_extensions.append(list_files[-1])
@@ -103,20 +121,25 @@ class SortDirectory:
                 except PermissionError:
                     print("Permission error for delete", direct)
 
-        print('\n------------------------- File sorting is done successfully! -------------------------\n')
-        result = ["\n".join(i for i in known_extensions), "\n".join(i for i in unknown_extensions)]
+        print(
+            "\n------------------------- File sorting is done successfully! -------------------------\n"
+        )
+        result = [
+            "\n".join(i for i in known_extensions),
+            "\n".join(i for i in unknown_extensions),
+        ]
         return print(self.x.create_row(result))
 
 
 def run_sort():
     try:
-        start_path = input('Input path: ')
+        start_path = input("Input path: ")
         x = SortDirectory()
         x.sort_create_files(start_path)
         while True:
             b = input("\nDo you want to sort something else? (y/n)\n>>>> ")
             if b == "y":
-                a = str(input('Input path: '))
+                a = str(input("Input path: "))
                 x = SortDirectory()
                 x.sort_create_files(a)
                 continue
@@ -130,5 +153,5 @@ def run_sort():
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_sort()

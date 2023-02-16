@@ -8,26 +8,29 @@ class NoteBook(UserDict):
     def __init__(self):
         super().__init__()
         self.index = 1
-        self.ind_lst = []
+        self.ind_list = []
         self.x = NotebookView()
 
     def read_file(self):
         with open('NoteBook.bin', 'rb') as reader:
-            self.data = pickle.load(reader)
-            return self.data
+            received_notebook = pickle.load(reader)
+            self.data = received_notebook.data
+            self.x = received_notebook.x
+            self.index = received_notebook.index
+            self.ind_list = received_notebook.ind_list
 
     def write_file(self):
         with open('NoteBook.bin', 'wb') as writer:
-            pickle.dump(self.data, writer)
+            pickle.dump(self, writer)
 
     def add_note(self, record):
-        while self.index in self.ind_lst:
+        while self.index in self.ind_list:
             self.index += 1
-        self.ind_lst.append(self.index)
-        self.ind_lst.append(self.index)
-        self.data[max(self.ind_lst)] = record
+        self.ind_list.append(self.index)
+        self.ind_list.append(self.index)
+        self.data[max(self.ind_list)] = record
         return self.index
-    
+
     def edit_note(self, index, new_note):
         self.data[index].note = Note(new_note)
         return f"Note {index} successfully changed"
@@ -39,22 +42,34 @@ class NoteBook(UserDict):
         result = []
         for rec in self.data:
             if symb.lower() in str(self.data[rec].note).lower():
-                result.append([rec, ", ".join(p.value for p in self.data[rec].tags), self.data[rec].note.value])
+                result.append(
+                    [
+                        rec,
+                        ", ".join(p.value for p in self.data[rec].tags),
+                        self.data[rec].note.value,
+                    ]
+                )
         if result:
             return self.x.create_table(result)
         else:
-            return 'No matches found'
+            return "No matches found"
 
     def sort_tags(self, symb):
         result = []
         for rec in self.data:
             for tag in self.data[rec].tags:
                 if symb.lower() in str(tag).lower():
-                    result.append([rec, ", ".join(p.value for p in self.data[rec].tags), self.data[rec].note.value])
+                    result.append(
+                        [
+                            rec,
+                            ", ".join(p.value for p in self.data[rec].tags),
+                            self.data[rec].note.value,
+                        ]
+                    )
         if result:
             return self.x.create_table(result)
         else:
-            return 'No matches found'
+            return "No matches found"
 
     def show_all(self):
         result = []

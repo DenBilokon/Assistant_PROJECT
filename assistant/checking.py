@@ -11,11 +11,45 @@ class NameCheck(Checking):
     def check(self, name):
         """Normalize names from cyrillic to latin"""
         cyrillic_symbols = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-        translations = ("a", "b", "v", "g", "d", "e", "e", "j", "z",
-                        "i", "j", "k", "l", "m", "n", "o", "p", "r",
-                        "s", "t", "u", "f", "h", "ts", "ch", "sh",
-                        "sch", "", "y", "", "e", "yu", "ya", "je",
-                        "i", "ji", "g")
+        translations = (
+            "a",
+            "b",
+            "v",
+            "g",
+            "d",
+            "e",
+            "e",
+            "j",
+            "z",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "r",
+            "s",
+            "t",
+            "u",
+            "f",
+            "h",
+            "ts",
+            "ch",
+            "sh",
+            "sch",
+            "",
+            "y",
+            "",
+            "e",
+            "yu",
+            "ya",
+            "je",
+            "i",
+            "ji",
+            "g",
+        )
         trans = {}
         for i, j in zip(cyrillic_symbols, translations):
             trans[ord(i)] = j
@@ -30,7 +64,8 @@ class NameCheck(Checking):
 class PhoneCheck(Checking):
     def check(self, phone):
         new_phone = (
-            str(phone).strip()
+            str(phone)
+            .strip()
             .removeprefix("+")
             .replace("(", "")
             .replace(")", "")
@@ -63,8 +98,8 @@ class BirthdayCheck(Checking):
 
 class MailCheck(Checking):
     def check(self, email):
-        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
         if re.fullmatch(regex, str(email)):
             return email
         else:
-            raise ''
+            raise ""

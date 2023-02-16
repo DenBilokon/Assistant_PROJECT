@@ -37,4 +37,5 @@ def input_error(func):
             return "Unknown command. Press 'help' to see HELP DESK"
         except ElseError:
             return "Something went wrong. Please try again"
+
     return wrapper

@@ -61,7 +61,7 @@ def help_user(*args):
 @input_error
 def add_birthday(*args):
     name = Name(str(args[0]).title())
-    birthday = tuple(re.split('\D', args[1]))
+    birthday = tuple(re.split("\D", args[1]))
     if name.value in ADDRESSBOOK:
         ADDRESSBOOK[name.value].add_user_birthday(*birthday)
         return f"The Birthday for {name.value} was recorded"
@@ -75,7 +75,7 @@ def add_mail(*args):
     mail = Mail(str(args[1]))
     if name.value in ADDRESSBOOK:
         ADDRESSBOOK[name.value].add_mail(mail)
-        return f'{mail.value} successfully added to contact {name.value}'
+        return f"{mail.value} successfully added to contact {name.value}"
     else:
         raise UserMissing("User is not found. Please try again")
 
@@ -85,7 +85,7 @@ def delete_mail(*args):
     name = Name(str(args[0]).title())
     if name.value in ADDRESSBOOK:
         ADDRESSBOOK[name.value].del_mail()
-        return f'Successfully deleted {name.value} mail'
+        return f"Successfully deleted {name.value} mail"
     else:
         raise ElseError("Something wrong. Please try again")
 
@@ -96,7 +96,7 @@ def change_mail(*args):
     mail = Mail(str(args[1]))
     if name.value in ADDRESSBOOK:
         ADDRESSBOOK[name.value].chang_mail(mail)
-        return f'{mail.value} successfully changed to contact {name.value}'
+        return f"{mail.value} successfully changed to contact {name.value}"
     else:
         raise UserMissing("User is not found. Please try again")
 
@@ -104,14 +104,14 @@ def change_mail(*args):
 @input_error
 def add_phone(*args):
     name = Name(str(args[0]).title())
-    phone_num = (Phone(args[1]))
+    phone_num = Phone(args[1])
     rec = ADDRESSBOOK.get(name.value)
     if rec:
         rec.add_phone(phone_num)
     else:
         rec = Record(name, phone_num)
         ADDRESSBOOK.add_record(rec)
-    return f'Contact {name} {phone_num} added'
+    return f"Contact {name} {phone_num} added"
 
 
 @input_error
@@ -121,9 +121,9 @@ def change(*args):
     new_phone = Phone(args[2])
     if name.value in ADDRESSBOOK:
         if ADDRESSBOOK.change_record(name.value, old_phone.value, new_phone.value):
-            return f'User {name} changed {old_phone} to {new_phone}'
+            return f"User {name} changed {old_phone} to {new_phone}"
         else:
-            return 'Try again'
+            return "Try again"
     else:
         return "User is not found"
 
@@ -134,7 +134,7 @@ def add_address(*args):
     address = Address(str(args[1]).title())
     if name.value in ADDRESSBOOK:
         ADDRESSBOOK[name.value].add_address(address)
-        return f'Address: {address.value.title()}, successfully added to contact {name.value}'
+        return f"Address: {address.value.title()}, successfully added to contact {name.value}"
     else:
         raise UserMissing("User is not found. Please try again")
 
@@ -145,7 +145,7 @@ def change_address(*args):
     address = Address(str(args[1]).title())
     if name.value in ADDRESSBOOK:
         ADDRESSBOOK[name.value].change_address(address)
-        return f'Address: {address.value}, successfully changed to contact {name.value}'
+        return f"Address: {address.value}, successfully changed to contact {name.value}"
     else:
         raise UserMissing("User is not found. Please try again")
 
@@ -155,7 +155,7 @@ def remove_address(*args):
     name = Name(str(args[0]).title())
     if name.value in ADDRESSBOOK:
         ADDRESSBOOK[name.value].remove_address()
-        return f'Successfully deleted {name.value} address'
+        return f"Successfully deleted {name.value} address"
     else:
         raise ElseError("Something went wrong. Please try again")
 
@@ -168,7 +168,7 @@ def days_to_bday(*args):
             days = ADDRESSBOOK[name.value].days_to_birthday()
             return days
         else:
-            return f'{name.value} birthday is unknown'
+            return f"{name.value} birthday is unknown"
     else:
         raise UserMissing("User is not found. Please try again")
 
@@ -200,16 +200,18 @@ def delete_phone(*args):
 @input_error
 def get_birthdays_per_period(*args):
     period = args[0]
-    item = ''
+    item = ""
     current_date = datetime.now().date()
     for contact in ADDRESSBOOK.values():
-        contact_birthday = datetime.date(datetime.strptime(str(contact.birthday), '%Y-%m-%d')).replace(year=current_date.year)
+        contact_birthday = datetime.date(
+            datetime.strptime(str(contact.birthday), "%Y-%m-%d")
+        ).replace(year=current_date.year)
         if current_date < contact_birthday < current_date + timedelta(days=int(period)):
             item += f'{contact.name} (B-day: {contact.birthday}; email: {contact.mail}): {", ".join([p.value for p in contact.phones])}\n'
     if item:
-        return item.rstrip('\n')
+        return item.rstrip("\n")
     else:
-        return f'No birthdays for the next {period} days'
+        return f"No birthdays for the next {period} days"
 
 
 @input_error
@@ -228,15 +230,15 @@ def show_all(*args):
     if len(ADDRESSBOOK):
         return ADDRESSBOOK.show_all_rec()
     else:
-        return 'AddressBook is empty'
+        return "AddressBook is empty"
 
 
 @input_error
 def show_list(*args):
     if len(ADDRESSBOOK):
-        return ''.join(ADDRESSBOOK.iterator(int(args[0])))
+        return "".join(ADDRESSBOOK.iterator(int(args[0])))
     else:
-        return 'AddressBook is empty'
+        return "AddressBook is empty"
 
 
 COMMANDS = {
@@ -259,7 +261,7 @@ COMMANDS = {
     change_mail: ["change mail"],
     add_address: ["add address"],
     change_address: ["change address"],
-    remove_address: ["delete address"]
+    remove_address: ["delete address"],
 }
 
 
@@ -289,11 +291,11 @@ def run_addressbook():
         user_input = str(input(">>>> "))
         result = run_bot(user_input)
         if result == "Bye":
-            save = input('Do you want to save? (y/n) ')
-            if save == 'n':
+            save = input("Do you want to save? (y/n) ")
+            if save == "n":
                 print("Goodbye!")
                 break
-            elif save == 'y':
+            elif save == "y":
                 ADDRESSBOOK.write_file()
                 print("All data save. Goodbye!")
                 break

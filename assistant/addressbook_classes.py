@@ -6,66 +6,67 @@ import pickle
 
 
 class PhoneLengthError(Exception):
-    """ Exception for wrong length of the phone number """
+    """Exception for wrong length of the phone number"""
 
 
 class PhoneMissing(Exception):
-    """ Exception if phone number not found """
+    """Exception if phone number not found"""
 
 
 class PhoneError(Exception):
-    """ Exception when a letter is in the phone number """
+    """Exception when a letter is in the phone number"""
 
 
 class MailTypeError(Exception):
-    """ Exception for email mistakes """
+    """Exception for email mistakes"""
 
 
 class AddressTypeError(Exception):
-    """ Exception for address mistakes """
+    """Exception for address mistakes"""
 
 
 class UserMissing(Exception):
-    """ Exception if user not found """
+    """Exception if user not found"""
 
 
 class BirthdayTypeError(Exception):
-    """ Exception for birthday format mistakes """
+    """Exception for birthday format mistakes"""
 
 
 class BirthdayDateError(Exception):
-    """ Exception for birthday date mistakes """
+    """Exception for birthday date mistakes"""
 
 
 class UnknownCommand(Exception):
-    """ Exception if user input wrong command """
+    """Exception if user input wrong command"""
 
 
 class AddressExistError(Exception):
-    """ Exception if user has an address """
+    """Exception if user has an address"""
 
 
 class MailExistError(Exception):
-    """Exception if user has an email """
+    """Exception if user has an email"""
 
 
 class ElseError(Exception):
-    """ Exception for any else errors"""
+    """Exception for any else errors"""
 
 
 class AddressBook(UserDict):
-    """ Dictionary class """
+    """Dictionary class"""
+
     def __init__(self):
         super().__init__()
         self.x = AddressbookView()
 
     def read_file(self):
-        with open('AddressBook.bin', 'rb') as reader:
+        with open("AddressBook.bin", "rb") as reader:
             self.data = pickle.load(reader)
             return self.data
 
     def write_file(self):
-        with open('AddressBook.bin', 'wb') as writer:
+        with open("AddressBook.bin", "wb") as writer:
             pickle.dump(self.data, writer)
 
     def add_record(self, record):
@@ -79,23 +80,53 @@ class AddressBook(UserDict):
         for rec in self.data.values():
             if rec in self.data.values():
                 if str(symb).lower() in str(rec.name).lower():
-                    result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join(p.value for p in rec.phones)])
+                    result.append(
+                        [
+                            rec.name,
+                            rec.birthday,
+                            rec.mail,
+                            rec.address,
+                            ", ".join(p.value for p in rec.phones),
+                        ]
+                    )
                 else:
                     for phone in rec.phones:
                         if str(symb).lower() in str(phone):
-                            result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join(p.value for p in rec.phones)])
+                            result.append(
+                                [
+                                    rec.name,
+                                    rec.birthday,
+                                    rec.mail,
+                                    rec.address,
+                                    ", ".join(p.value for p in rec.phones),
+                                ]
+                            )
             else:
                 continue
         return self.x.create_table(result)
 
     def show_rec(self, name):
-        result = [name, self.data[name].birthday, self.data[name].mail, self.data[name].address, ", ".join(str(p.value) for p in self.data[name].phones)]
+        result = [
+            name,
+            self.data[name].birthday,
+            self.data[name].mail,
+            self.data[name].address,
+            ", ".join(str(p.value) for p in self.data[name].phones),
+        ]
         return self.x.create_row(result)
 
     def show_all_rec(self):
         result = []
         for rec in self.data.values():
-            result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join([p.value for p in rec.phones])])
+            result.append(
+                [
+                    rec.name,
+                    rec.birthday,
+                    rec.mail,
+                    rec.address,
+                    ", ".join([p.value for p in rec.phones]),
+                ]
+            )
         return self.x.create_table(result)
 
     def change_record(self, name_user, old_record_num, new_record_num):
@@ -114,13 +145,20 @@ class AddressBook(UserDict):
             n = records_num
         for rec in self.data.values():
             if count < n:
-                result.append([rec.name, rec.birthday, rec.mail, rec.address, ", ".join([p.value for p in rec.phones])])
+                result.append(
+                    [
+                        rec.name,
+                        rec.birthday,
+                        rec.mail,
+                        rec.address,
+                        ", ".join([p.value for p in rec.phones]),
+                    ]
+                )
                 count += 1
         yield self.x.create_table(result)
 
 
 class Field:
-
     def __init__(self, value):
         self._value = value
 
@@ -137,7 +175,6 @@ class Field:
 
 
 class Name(Field):
-
     def __str__(self):
         return str(self._value)
 
@@ -169,7 +206,8 @@ class Phone(Field):
 
 
 class Birthday(datetime, Field):
-    """ Class for creating fields 'birthday' """
+    """Class for creating fields 'birthday'"""
+
     #
     # @staticmethod
     # def sanitize_date(year, month, day):
@@ -235,7 +273,7 @@ class Address(Field):
 
 
 class Record:
-    """ Class for record name or phones"""
+    """Class for record name or phones"""
 
     def __init__(self, name, phone=None, birthday=None, mail=None, address=None):
         self.birth = BirthdayCheck()
@@ -269,7 +307,7 @@ class Record:
             if phone.value == old_phone.value:
                 self.phones.remove(phone)
                 self.phones.append(new_phone)
-                return f'{old_phone} to {new_phone} changed'
+                return f"{old_phone} to {new_phone} changed"
             else:
                 return print(f"Phone {old_phone} not found in the Record")
 
@@ -279,7 +317,7 @@ class Record:
         for ph in self.phones:
             if ph.value == phone.value:
                 self.phones.remove(ph)
-                return f'Phone {phone_num} deleted'
+                return f"Phone {phone_num} deleted"
             else:
                 raise PhoneMissing
 
@@ -303,13 +341,15 @@ class Record:
         cur_year = cur_date.year
 
         if self.birthday is not None:
-            birthday = datetime.strptime(self.birthday, '%Y-%m-%d')
+            birthday = datetime.strptime(self.birthday, "%Y-%m-%d")
             this_year_birthday = datetime(cur_year, birthday.month, birthday.day).date()
             delta = this_year_birthday - cur_date
             if delta.days >= 0:
                 return f"{self.name}'s birthday will be in {delta.days} days"
             else:
-                next_year_birthday = datetime(cur_year + 1, birthday.month, birthday.day).date()
+                next_year_birthday = datetime(
+                    cur_year + 1, birthday.month, birthday.day
+                ).date()
                 delta = next_year_birthday - cur_date
                 return f"{self.name}'s birthday will be in {delta.days} days"
         else:

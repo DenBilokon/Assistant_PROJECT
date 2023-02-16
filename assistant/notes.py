@@ -35,16 +35,16 @@ def help_user(*args):
 
 
 def add_note(*args):
-    note = input('Enter your note: ')
-    tag = input('Enter tag or tags to your note: ')
+    note = input("Enter your note: ")
+    tag = input("Enter tag or tags to your note: ")
     record = Record(note, tag)
     NOTEBOOK.add_note(record)
     return f"Note successfully added"
 
 
 def change_note(*args):
-    index = input('Enter note number: ')
-    new_note = input('Enter new note: ')
+    index = input("Enter note number: ")
+    new_note = input("Enter new note: ")
     try:
         return NOTEBOOK.edit_note(int(index), new_note)
     except KeyError:
@@ -55,13 +55,13 @@ def delete_note(index):
     try:
         int(index)
     except ValueError:
-        return 'Try again. Input index'
+        return "Try again. Input index"
 
     if int(index) in NOTEBOOK.data.keys():
         NOTEBOOK.remove_note(int(index))
         return f"Note has been deleted"
     else:
-        return f'Not found index {index}'
+        return f"Not found index {index}"
 
 
 def search_notes(message):
@@ -72,7 +72,7 @@ def show_all(*args):
     if len(NOTEBOOK):
         return NOTEBOOK.show_all()
     else:
-        return 'No notes found'
+        return "No notes found"
 
 
 def sort_tags(message):
@@ -88,7 +88,7 @@ COMMANDS = {
     change_note: ["change"],
     delete_note: ["delete"],
     search_notes: ["find note"],
-    sort_tags: ["find tag"]
+    sort_tags: ["find tag"],
 }
 
 
@@ -100,7 +100,6 @@ def parse_command(text: str):
     return None, None
 
 
-# Функція спілкування з юзером і виконання функцій відповідно до команди
 def run_bot(user_input):
     command, data = parse_command(user_input.lower())
     if not command:
@@ -119,11 +118,11 @@ def run_notes():
         user_input = str(input(">>>> "))
         result = run_bot(user_input)
         if result == "Bye":
-            save = input('Do you want to save? (y/n) ')
-            if save == 'n':
+            save = input("Do you want to save? (y/n) ")
+            if save == "n":
                 print("Goodbye!")
                 break
-            elif save == 'y':
+            elif save == "y":
                 NOTEBOOK.write_file()
                 print("All data save. Goodbye!")
                 break

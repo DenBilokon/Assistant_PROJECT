@@ -12,14 +12,14 @@ class BeautyView:
 class AddressbookView(BeautyView):
     def create_table(self, data):
         x = PrettyTable()
-        x.field_names = ['Name', 'Birthday', 'Email', 'Address', 'Phones']
+        x.field_names = ["Name", "Birthday", "Email", "Address", "Phones"]
         for i in data:
             x.add_row(i)
         return x
 
     def create_row(self, data):
         x = PrettyTable()
-        x.field_names = ['Name', 'Birthday', 'Email', 'Address', 'Phones']
+        x.field_names = ["Name", "Birthday", "Email", "Address", "Phones"]
         x.add_row(data)
         return x
 
@@ -27,14 +27,14 @@ class AddressbookView(BeautyView):
 class NotebookView(BeautyView):
     def create_table(self, data):
         x = PrettyTable()
-        x.field_names = ['Index', 'Tags', 'Note']
+        x.field_names = ["Index", "Tags", "Note"]
         for i in data:
             x.add_row(i)
         return x
 
     def create_row(self, data):
         x = PrettyTable()
-        x.field_names = ['Index', 'Tags', 'Note']
+        x.field_names = ["Index", "Tags", "Note"]
         x.add_row(data)
         return x
 
@@ -42,7 +42,7 @@ class NotebookView(BeautyView):
 class SortDirView(BeautyView):
     def create_row(self, data):
         x = PrettyTable()
-        x.field_names = ['Known_extensions', "Unknown_extensions"]
+        x.field_names = ["Known_extensions", "Unknown_extensions"]
         x.add_row(data)
         return x
 
