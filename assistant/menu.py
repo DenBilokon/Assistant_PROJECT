@@ -2,8 +2,13 @@
 from addressbook import run_addressbook as a_main
 from notes import run_notes as b_main
 from sort_directory import run_sort as c_main
+from flask import Flask
 
 
+app = Flask(__name__)
+
+
+@app.route('/')
 def menu():
     work_loop = True
     while True:
@@ -26,4 +31,4 @@ def menu():
 
 
 if __name__ == "__main__":
-    menu()
+    app.run(debug=False, host='0.0.0.0')
