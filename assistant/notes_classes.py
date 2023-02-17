@@ -12,7 +12,7 @@ class NoteBook(UserDict):
         self.x = NotebookView()
 
     def read_file(self):
-        with open('NoteBook.bin', 'rb') as reader:
+        with open('data/NoteBook.bin', 'rb') as reader:
             received_notebook = pickle.load(reader)
             self.data = received_notebook.data
             self.x = received_notebook.x
@@ -20,7 +20,7 @@ class NoteBook(UserDict):
             self.ind_list = received_notebook.ind_list
 
     def write_file(self):
-        with open('NoteBook.bin', 'wb') as writer:
+        with open('data/NoteBook.bin', 'wb') as writer:
             pickle.dump(self, writer)
 
     def add_note(self, record):

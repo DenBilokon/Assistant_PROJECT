@@ -1,6 +1,6 @@
 FROM python:3.11
 
-WORKDIR /app
+WORKDIR /assistant
 
 COPY .. .
 
@@ -8,4 +8,6 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-ENTRYPOINT ["python", "app/menu.py"]
+CMD ["python", "menu.py"]
+
+VOLUME ./data:/data

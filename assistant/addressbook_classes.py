@@ -61,12 +61,12 @@ class AddressBook(UserDict):
         self.x = AddressbookView()
 
     def read_file(self):
-        with open("AddressBook.bin", "rb") as reader:
+        with open("data/AddressBook.bin", "rb") as reader:
             self.data = pickle.load(reader)
             return self.data
 
     def write_file(self):
-        with open("AddressBook.bin", "wb") as writer:
+        with open("data/AddressBook.bin", "wb") as writer:
             pickle.dump(self.data, writer)
 
     def add_record(self, record):
